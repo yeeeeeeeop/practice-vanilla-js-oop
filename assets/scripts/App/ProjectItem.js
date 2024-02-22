@@ -1,7 +1,7 @@
-import { Tooltip } from './Tooltip.js';
-import { DOMHelper } from '../Utility/DOMHelper.js';
+import Tooltip from './Tooltip.js';
+import DOMHelper from '../Utility/DOMHelper.js';
 
-export class ProjectItem {
+export default class ProjectItem {
   hasActiveTooltip = false;
 
   constructor(id, updateProjectListsFunction, type) {
@@ -32,12 +32,12 @@ export class ProjectItem {
 
   connectDrag() {
     const item = document.getElementById(this.id);
-    item.addEventListener('dragstart', event => {
+    item.addEventListener('dragstart', (event) => {
       event.dataTransfer.setData('text/plain', this.id);
       event.dataTransfer.effectAllowed = 'move';
     });
 
-    item.addEventListener('dragend', event => {
+    item.addEventListener('dragend', (event) => {
       console.log(event);
     });
   }

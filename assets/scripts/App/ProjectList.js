@@ -1,25 +1,26 @@
-import { ProjectItem } from './ProjectItem.js';
-import { DOMHelper } from '../Utility/DOMHelper.js';
+import ProjectItem from './ProjectItem.js';
+import DOMHelper from '../Utility/DOMHelper.js';
 
-export class ProjectList {
+export default class ProjectList {
   projects = [];
 
   constructor(type) {
     this.type = type;
 
     const prjItems = document.querySelectorAll(`#${type}-projects li`);
-    for (const prjItem of prjItems) {
+
+    prjItems.forEach((prjItem) => {
       this.projects.push(
         new ProjectItem(prjItem.id, this.switchProject.bind(this), this.type),
       );
-    }
+    });
     this.connectDroppable();
   }
 
   connectDroppable() {
     const list = document.querySelector(`#${this.type}-projects ul`);
 
-    list.addEventListener('dragenter', event => {
+    list.addEventListener('dragenter', (event) => {
       // console.log(event);
       if (event.dataTransfer.types[0] === 'text/plain') {
         list.parentElement.classList.add('droppable');
@@ -27,23 +28,23 @@ export class ProjectList {
       }
     });
 
-    list.addEventListener('dragover', event => {
+    list.addEventListener('dragover', (event) => {
       // console.log(event);
       if (event.dataTransfer.types[0] === 'text/plain') {
         event.preventDefault();
       }
     });
 
-    list.addEventListener('dragleave', event => {
+    list.addEventListener('dragleave', (event) => {
       // console.log(event.relatedTarget);
       if (event.relatedTarget.closest(`#${this.type}-projects ul`) !== list) {
         list.parentElement.classList.remove('droppable');
       }
     });
 
-    list.addEventListener('drop', event => {
+    list.addEventListener('drop', (event) => {
       const prjId = event.dataTransfer.getData('text/plain');
-      if (this.projects.find(p => p.id === prjId)) {
+      if (this.projects.find((p) => p.id === prjId)) {
         return;
       }
 
@@ -61,7 +62,6 @@ export class ProjectList {
   }
 
   addProject(project) {
-    console.log(this.projects);
     this.projects.push(project);
     DOMHelper.moveElement(project.id, `#${this.type}-projects ul`);
     project.update(this.switchProject.bind(this), this.type);
@@ -70,7 +70,7 @@ export class ProjectList {
   switchProject(projectId) {
     // const projectIndex = this.projects.findIndex((p) => p.id === projectId);
     // this.projects.splice(projectIndex, 1);
-    this.switchHandler(this.projects.find(p => p.id === projectId));
-    this.projects = this.projects.filter(p => p.id !== projectId);
+    this.switchHandler(this.projects.find((p) => p.id === projectId));
+    this.projects = this.projects.filter((p) => p.id !== projectId);
   }
 }
